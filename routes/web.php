@@ -53,8 +53,10 @@ Route::middleware(['auth', CheckUserType::class . ':owner'])->group(function () 
     Route::get('/download-sales-report', [PDFController::class, 'download'])->name('download');
 });
 
-// Kelola Users
-Route::resource('users', UserController::class);
+// Kelola Users (hanya owner)
+Route::middleware(['auth', CheckUserType::class . ':owner'])->group(function () {
+    Route::resource('users', UserController::class);
+});
 
 // **Customer Menu & Catalog**
 Route::get('/menu', [CustomerController::class, 'menu'])->name('menu');
