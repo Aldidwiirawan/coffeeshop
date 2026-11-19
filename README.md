@@ -122,10 +122,17 @@ php artisan key:generate
 
 Create a MySQL database (for example `coffeeshop`), fill in `.env`, then run:
 ```bash
-php artisan migrate --seed
+php artisan migrate
 php artisan storage:link
 ```
-The seeder creates an admin account (`admin@example.com`) and default categories. **Change its password after the first login.** New registrations become customers; to create an owner, set `usertype` to `owner` for that user in the `users` table.
+
+> ⚠️ **Known gap in the migrations:** they do not create everything the app uses. The `users.usertype` column (user role) and the `transaksi` / `detail_transaksi` tables (used by the Midtrans checkout) existed only in the original deployed database. Until migrations for them are added, create them manually; otherwise `php artisan db:seed` and the Midtrans checkout will fail.
+
+After the `usertype` column exists, run the seeder:
+```bash
+php artisan db:seed
+```
+The seeder creates an admin account (`admin@example.com`) and default categories. **Change its password after the first login.** New registrations become customers (`usertype = customer`); to create an owner, set `usertype` to `owner` for that user in the `users` table.
 
 ---
 
