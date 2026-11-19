@@ -1,161 +1,164 @@
-# Dwijaya Coffee - Web Based Coffee Shop Ordering System
+# ☕ Dwijaya Coffee — Online Coffee Shop Ordering System
 
-Dwijaya Coffee adalah aplikasi berbasis website yang dibuat untuk membantu proses digitalisasi Coffee Shop Dwijaya dalam melakukan pemesanan produk secara online.
+![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/UI-Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![Midtrans](https://img.shields.io/badge/Payment-Midtrans-002855?style=for-the-badge)
 
-Aplikasi ini membantu pelanggan melakukan pemesanan dengan mudah serta membantu pihak coffee shop dalam mengelola produk, transaksi, stok, dan laporan penjualan secara lebih efektif.
+> Web-based ordering system built with **Laravel** for **Dwijaya Coffee**, a local coffee shop. Customers browse the menu, fill a cart, and pay online through the **Midtrans** payment gateway, while admins manage products and orders and the owner monitors sales through charts and PDF reports.
 
+---
 
-## About Project
+## 📌 Project Overview
 
-Permasalahan utama Coffee Shop Dwijaya adalah proses pelayanan dan promosi yang masih perlu dikembangkan melalui teknologi digital.
+Dwijaya Coffee needed a digital channel for orders and promotion. This system lets customers order without visiting the shop, and every transaction is stored automatically so the business can manage its menu, orders, and sales reports in one place.
 
-Dengan adanya sistem pemesanan berbasis web ini, pelanggan dapat melakukan pemesanan tanpa harus datang langsung ke tempat. Selain itu, data transaksi tersimpan secara otomatis sehingga memudahkan pengelolaan bisnis.
+The project was built as a semester 4 group project in partnership with Dwijaya Coffee and was deployed for about a year, during which it was tried out by the café's owner.
 
+---
 
-## Features
+## 🚀 Key Features
 
-Customer:
-- Register dan login akun
-- Melihat daftar produk coffee
-- Melihat detail produk
-- Menambahkan produk ke keranjang
-- Mengubah jumlah pesanan
-- Menghapus produk dari keranjang
-- Checkout pesanan
-- Pembayaran digital
-- Melihat riwayat transaksi
-- Cetak bukti transaksi
+### 🛒 Customer
+- Register and log in.
+- Browse the menu and catalog with category filter and search.
+- Add products to a cart (stored in the browser), change quantities, and remove items.
+- Check out and pay online with **Midtrans Snap**.
 
+### 🧑‍🍳 Admin
+- Dashboard.
+- Manage product categories (with active/inactive status).
+- Manage products: name, category, image, price, and active status.
+- View order details and update order status (*Pending, Processing, Completed, Canceled*).
 
-Admin / Karyawan:
-- Dashboard admin
-- Mengelola kategori produk
-- Mengelola data produk
-- Menambah produk baru
-- Mengubah informasi produk
-- Menghapus produk
-- Mengelola stok produk
-- Memproses pesanan customer
+### 📈 Owner
+- Dashboard.
+- Sales report page.
+- Sales chart with search filter (Chart.js).
+- Download the sales report as **PDF** (DomPDF).
+- Manage user accounts.
 
+### 🔐 Roles
 
-Owner:
-- Melihat laporan penjualan
-- Melihat grafik transaksi
-- Export laporan
-- Mengelola data pengguna
+| Role | Access |
+| :--- | :--- |
+| **Owner** | Dashboard, sales report, sales chart, PDF report, user management |
+| **Admin** | Dashboard, categories, products, orders |
+| **Customer** | Menu, catalog, cart, checkout & payment |
 
+---
 
-## Technology Used
+## 🛠️ Technology Stack
 
-- Laravel
-- PHP
-- MySQL
-- Blade Template
-- Tailwind CSS
-- JavaScript
-- Midtrans Payment Gateway
+| Component | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Framework** | [Laravel 11](https://laravel.com/) (PHP 8.2) | Web application |
+| **Database** | MySQL | Data storage |
+| **Views** | Blade, [Bootstrap 5](https://getbootstrap.com/), Bootstrap Icons | User interface |
+| **Payment Gateway** | [Midtrans](https://midtrans.com/) (`midtrans/midtrans-php`, Snap) | Online payment |
+| **PDF** | [DomPDF](https://github.com/barryvdh/laravel-dompdf) | Sales report export |
+| **Charts** | [Chart.js](https://www.chartjs.org/) | Sales chart |
+| **Authentication** | Laravel Fortify, custom role middleware (`CheckUserType`) | Login and role-based access |
 
+---
 
-## System Flow
+## 🌐 System Architecture
 
-1. Customer melakukan registrasi atau login akun
-2. Customer memilih produk coffee
-3. Produk ditambahkan ke keranjang
-4. Customer melakukan checkout
-5. Customer melakukan pembayaran digital
-6. Karyawan menerima dan memproses pesanan
-7. Pesanan dikirim kepada customer
-
-
-## User Role
-
-| Role | Description |
-|---|---|
-| Owner | Mengelola laporan penjualan dan pengguna |
-| Karyawan | Mengelola produk, kategori, dan pesanan |
-| Customer | Melakukan pemesanan dan pembayaran |
-
-
-## Installation
-
-Clone repository
-
-```bash
-git clone https://github.com/Sheva1012/dwijayacoffee.git
+```text
+Customer ──► Menu & Catalog ──► Cart ──► Checkout ──► Midtrans Snap payment
+                                                          │
+                                                          ▼
+                                            Order saved (status: Pending)
+                                                          │
+Admin ──────────────────────────────► Process order ──► Processing ──► Completed
+                                                          │
+Owner ─────────────────────────────► Sales report, chart, and PDF export
 ```
 
-Masuk folder project
+---
 
-```bash
-cd dwijayacoffee
+## 📁 Project Structure
+
+```text
+app/
+├── Http/
+│   ├── Controllers/       # Auth, Catalog, Category, Chart, Customer, Dashboard,
+│   │                      # Laporan (reports), Midtrans, Order, PDF, Product, User
+│   └── Middleware/        # CheckUserType (role-based access)
+└── Models/                # User, Category, Product, Order, OrderDetail, Transaction, DetailTransaksi
+database/
+├── migrations/            # users, categories, products, orders, order_details
+└── seeders/               # Admin account and default categories
+resources/views/
+├── auth/                  # Login & register
+├── customer/              # Home, about, menu, catalog, cart
+├── category/ products/    # Admin product management
+├── order/                 # Order list, detail, status update
+├── laporan/ chart.blade.php download.blade.php  # Owner reports
+└── user/                  # User management
+routes/web.php             # Web routes grouped by role
 ```
 
-Install dependency
+---
 
+## ⚙️ Installation & Setup
+
+### Prerequisites
+- PHP 8.2+ and Composer
+- Node.js & npm
+- MySQL / MariaDB
+- A [Midtrans](https://dashboard.midtrans.com/) account (sandbox is fine for testing)
+
+### Steps
 ```bash
+git clone https://github.com/Aldidwiirawan/coffeeshop.git
+cd coffeeshop
 composer install
-```
-
-Install package frontend
-
-```bash
 npm install
-```
-
-Copy file environment
-
-```bash
 cp .env.example .env
-```
-
-Generate application key
-
-```bash
 php artisan key:generate
 ```
 
-Konfigurasi database pada file .env
-
-```env
-DB_DATABASE=coffeeshop
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Jalankan migration
-
+Create a MySQL database (for example `coffeeshop`), fill in `.env`, then run:
 ```bash
-php artisan migrate
+php artisan migrate --seed
+php artisan storage:link
 ```
+The seeder creates an admin account (`admin@example.com`) and default categories. **Change its password after the first login.** New registrations become customers; to create an owner, set `usertype` to `owner` for that user in the `users` table.
 
-Menjalankan aplikasi
+---
+
+## 🔐 Environment Variables
+
+| Variable | Description |
+| :--- | :--- |
+| `DB_CONNECTION` | `mysql` |
+| `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | MySQL connection |
+| `MIDTRANS_SERVER_KEY` | Midtrans server key |
+| `MIDTRANS_CLIENT_KEY` | Midtrans client key |
+| `MIDTRANS_IS_PRODUCTION` | `false` for sandbox, `true` for production |
+
+> ⚠️ Never commit the `.env` file or your Midtrans keys.
+
+---
+
+## ▶️ How to Run
 
 ```bash
 php artisan serve
 ```
+Open `http://127.0.0.1:8000`. Log in as admin, or register a new account to order as a customer.
 
+---
 
-## Database
+## 👨‍💻 Author
 
-Database:
-- MySQL
+Semester 4 group project (team of four) in partnership with Dwijaya Coffee.
 
-Main table:
-- Users
-- Products
-- Categories
-- Orders
-- Transactions
+**Aldi Dwi Irawan** — team lead; worked across all parts of the system
+- GitHub: [@Aldidwiirawan](https://github.com/Aldidwiirawan)
+- Portfolio: [aldidwiirawan.vercel.app](https://aldidwiirawan.vercel.app)
+- Email: aldidwiirawan2004@gmail.com
 
-
-## Developer
-
-Sheva Adrian
-
-Github:
-https://github.com/Sheva1012
-
-
-## License
-
-Project ini dibuat sebagai implementasi sistem informasi pemesanan Coffee Shop berbasis website.
+Team member: Sheva Adrian ([@Sheva1012](https://github.com/Sheva1012))
